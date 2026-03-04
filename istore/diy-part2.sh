@@ -97,13 +97,6 @@ mv $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}/* $WORKINGDIR/
 rmdir $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}
 rm $WORKINGDIR/${LUCIBRANCH}.zip
 
-# 索引刷新 (强制重连血脉)
-echo ">>> [4/6] 强制刷新全系统索引..."
-rm -rf tmp
-# 物理删除旧链接，强迫重新生成
-./scripts/feeds update -i
-./scripts/feeds install -a -f
-
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
