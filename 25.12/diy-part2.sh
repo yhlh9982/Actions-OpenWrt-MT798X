@@ -84,4 +84,12 @@ fi
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.1.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
+# 恢复 feeds.conf.default
+if [ -f feeds.conf.default.bak ]; then
+    mv feeds.conf.default.bak feeds.conf.default
+fi
+
+# 防止存在 feeds.conf 覆盖
+rm -f feeds.conf
+
 echo "✅ SSH2 配置完成。"
