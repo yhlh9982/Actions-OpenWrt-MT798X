@@ -11,7 +11,6 @@ env:
   DEVICE_NAME: istore-clx-s20l
   # 源码仓库地址
   REPO_URL: https://github.com/dailook/immortalwrt-mt798x-6.6
-  #REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
   # 源码分支
   REPO_BRANCH: openwrt-24.10-6.6
   # Feeds 配置文件名
@@ -121,20 +120,20 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH --single-branch openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    # 4. 更新并安装 Feeds
-    - name: Update feeds （Feeds更新）
-      run: cd openwrt && ./scripts/feeds update -a
-
-    - name: Install feeds （Feeds安装）
-      run: cd openwrt && ./scripts/feeds install -a
-
-    # 5. 加载自定义 Feeds (diy-part1.sh)
+    # 4. 加载自定义 Feeds (diy-part1.sh)
     - name: Load custom feeds （加载自定义 Feeds）
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
+
+    # 5. 更新并安装 Feeds
+    - name: Update feeds （Feeds更新）
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds （Feeds安装）
+      run: cd openwrt && ./scripts/feeds install -a
 
     # 6. 加载自定义配置 (diy-part2.sh)
     - name: Load custom configuration （加载自定义配置diy-part2）
@@ -144,7 +143,7 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
+        
     # 7. SSH 调试 (可选)
     - name: SSH connection to Actions （SSH 调试）
       uses: mxschmitt/action-tmate@v3
