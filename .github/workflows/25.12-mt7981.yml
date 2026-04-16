@@ -10,11 +10,9 @@ env:
   # 设备名称，用于生成发布标签
   DEVICE_NAME: 25.12-mt7981
   # 源码仓库地址
-  #REPO_URL: https://github.com/dailook/immortalwrt-mt798x-6.6
-  #REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
   REPO_URL: https://github.com/chasey-dev/immortalwrt-mt798x-rebase
   # 源码分支
-  REPO_BRANCH: 25.12-dev
+  REPO_BRANCH: 25.12
   # Feeds 配置文件名
   FEEDS_CONF: feeds.conf.default
   # .config 配置文件名
