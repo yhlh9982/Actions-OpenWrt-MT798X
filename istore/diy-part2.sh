@@ -36,10 +36,6 @@ fi
 # ---------------------------------------------------------
 # 3. QuickStart 首页温度显示修复
 # ---------------------------------------------------------
-# 下载 istore
-git clone --depth=1 https://github.com/linkease/istore  package/istore
-git clone --depth=1 https://github.com/linkease/nas-packages  package/nas
-git clone --depth=1 https://github.com/linkease/nas-packages-luci  package/nas-luci
 
 echo ">>> 执行 QuickStart 修复..."
 # 获取 GitHub Workspace 根目录 (diy-part2.sh 在 openwrt/ 下运行)
