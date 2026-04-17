@@ -111,6 +111,41 @@ if [ -n "$RUST_FILE" ] && [ -f "$RUST_FILE" ]; then
     echo "Rust local LLVM build enabled!"
 fi
 
+# =========================================================
+# 修复 eBPF 与 Daed 的内核依赖冲突 (终极版)
+# =========================================================
+echo ">>> [Kernel] 正在修复 eBPF/Daed 编译依赖..."
+
+# 1. 解决 vmlinux-btf 依赖警告
+# 因为该分支可能没有单独的 vmlinux-btf 包，我们从 daed 的 Makefile 中强行剔除它
+# (只要内核开启了 BTF，不需要这个虚拟包也能正常运行)
+find package feeds -name "Makefile" -path "*/daed/*" 2>/dev/null | xargs sed -i 's/+vmlinux-btf//g' 2>/dev/null || true
+echo "✅ 移除了 Daed 中的 vmlinux-btf 虚拟依赖。"
+
+# 2. 强行打通内核 BPF 与 TC (Traffic Control) 前置依赖
+# 直接向 mediatek/filogic 的内核模板注入，防止被 make oldconfig 静默丢弃
+for conf in target/linux/mediatek/filogic/config-*; do
+    if [ -f "$conf" ]; then
+        echo ">>> 正在为 $conf 注入 eBPF/TC 核心配置..."
+        
+        # --- 流量控制 (TC) 前置大门 (缺失会导致 act_bpf 丢失) ---
+        echo "CONFIG_NET_SCHED=y" >> "$conf"
+        echo "CONFIG_NET_CLS=y" >> "$conf"
+        echo "CONFIG_NET_CLS_ACT=y" >> "$conf"
+        
+        # --- BPF 核心与模块 ---
+        echo "CONFIG_NET_CLS_BPF=m" >> "$conf"
+        echo "CONFIG_NET_ACT_BPF=m" >> "$conf"
+        echo "CONFIG_BPF=y" >> "$conf"
+        echo "CONFIG_BPF_SYSCALL=y" >> "$conf"
+        echo "CONFIG_BPF_JIT=y" >> "$conf"
+        echo "CONFIG_CGROUP_BPF=y" >> "$conf"
+        echo "CONFIG_DEBUG_INFO_BTF=y" >> "$conf"
+        
+        echo "✅ eBPF 与底层网络调度配置注入完成。"
+    fi
+done
+
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
