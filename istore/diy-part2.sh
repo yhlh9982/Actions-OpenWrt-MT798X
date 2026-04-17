@@ -182,24 +182,34 @@ echo "✅ 移除了 Daed 中的 vmlinux-btf 虚拟依赖。"
 # 2. 强行打通内核 BPF 与 TC (Traffic Control) 前置依赖
 # 直接向 mediatek/filogic 的内核模板注入，防止被 make oldconfig 静默丢弃
 for conf in target/linux/mediatek/filogic/config-*; do
-    if [ -f "$conf" ]; then
-        echo ">>> 正在为 $conf 注入 eBPF/TC 核心配置..."
+    if[ -f "$conf" ]; then
+        echo ">>> 正在为 $conf 注入 eBPF/TC 核心与极致性能配置..."
         
-        # --- 流量控制 (TC) 前置大门 (缺失会导致 act_bpf 丢失) ---
+        # --- 1. 流量控制 (TC) 前置大门 (缺失会导致 act_bpf 丢失) ---
         echo "CONFIG_NET_SCHED=y" >> "$conf"
         echo "CONFIG_NET_CLS=y" >> "$conf"
         echo "CONFIG_NET_CLS_ACT=y" >> "$conf"
+        echo "CONFIG_NET_INGRESS=y" >> "$conf"
+        echo "CONFIG_NET_EGRESS=y" >> "$conf"
         
-        # --- BPF 核心与模块 ---
+        # --- 2. BPF 核心与模块 ---
         echo "CONFIG_NET_CLS_BPF=m" >> "$conf"
         echo "CONFIG_NET_ACT_BPF=m" >> "$conf"
         echo "CONFIG_BPF=y" >> "$conf"
         echo "CONFIG_BPF_SYSCALL=y" >> "$conf"
-        echo "CONFIG_BPF_JIT=y" >> "$conf"
         echo "CONFIG_CGROUP_BPF=y" >> "$conf"
         echo "CONFIG_DEBUG_INFO_BTF=y" >> "$conf"
         
-        echo "✅ eBPF 与底层网络调度配置注入完成。"
+        # --- 3. BPF 极致性能优化 (榨干路由器算力) ---
+        echo "CONFIG_BPF_JIT=y" >> "$conf"
+        echo "CONFIG_BPF_JIT_ALWAYS_ON=y" >> "$conf"
+        # 代理软件 (Daed/Clash) 的神级加速特性 (Sockmap 绕过网络栈)
+        echo "CONFIG_BPF_STREAM_PARSER=y" >> "$conf"
+        echo "CONFIG_NET_SOCK_MSG=y" >> "$conf"
+        # XDP 高速通道
+        echo "CONFIG_XDP_SOCKETS=y" >> "$conf"
+        
+        echo "✅ eBPF 高性能与底层网络调度配置注入完成。"
     fi
 done
 
