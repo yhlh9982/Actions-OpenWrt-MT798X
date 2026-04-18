@@ -89,7 +89,7 @@ jobs:
         echo ">>> Final Memory/Swap Status:"
         free -h
         
-   # 2. 初始化编译环境
+    # 2. 初始化编译环境
     - name: Initialization Environment （初始化编译环境）
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -99,17 +99,33 @@ jobs:
         sudo -E apt -yqq full-upgrade
         sudo -E apt -yqq autoremove --purge
         sudo -E apt -yqq clean
+
         sudo -E timedatectl set-timezone "$TZ"
-        
-        # 添加 clang llvm npm 依赖
-        sudo apt -yqq install dos2unix libfuse-dev clang llvm npm
-        # 添加 pnpm 依赖
+
+        sudo -E apt-get install -y \
+          build-essential \
+          bc \
+          flex \
+          bison \
+          python3 \
+          xz-utils \
+          tar \
+          libssl-dev \
+          libelf-dev \
+          libfuse-dev \
+          clang \
+          llvm \
+          dwarves \
+          dos2unix \
+          npm
+
         sudo npm install -g pnpm
-        
-        sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh )'
-        
+
+        sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
+
         echo "初始磁盘空间:"
         df -hT
 
