@@ -30,6 +30,8 @@ git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/c
 
 # Daed
 git clone --depth=1 -b kix https://github.com/QiuSimons/luci-app-daed.git package/custom/daed
+# 添加 vmlinux-btf 模块
+git clone --depth=1 https://github.com/QiuSimons/vmlinux-btf.git package/custom/vmlinux-btf
 
 # SSR+
 git clone --depth=1 https://github.com/fw876/helloworld.git package/custom/ssrp
