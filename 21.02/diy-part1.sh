@@ -14,6 +14,9 @@
 git clone --depth=1 https://github.com/iv7777/luci-app-authshield package/authshield
 git clone --depth=1 https://github.com/asvow/luci-app-tailscale package/tailscale
 
+git clone --depth=1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
+git clone --depth=1 https://github.com/janvanstiphout/luci-app-accesscontrol.git package/accesscontrol
+
 # 添加 openwrt 18.06-21.02 插件库
 # git clone --depth=1 -b Immortalwrt https://github.com/makebl/openwrt-package  package/openwrt-package
 # git clone --depth=1 -b Immortalwrt https://github.com/shidahuilang/openwrt-package  package/openwrt-package
