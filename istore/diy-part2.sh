@@ -157,38 +157,38 @@ if [ -n "$RUST_FILE" ] && [ -f "$RUST_FILE" ]; then
     echo "✅ Rust CI-LLVM build enabled (Safe Mode)!"
 fi
 
-# ---------------------------------------------------------
-# 7. 修复 eBPF 与 Daed 的内核依赖冲突
-# ---------------------------------------------------------
+# =========================================================
+# 修复 eBPF 与 Daed 的内核依赖冲突 (终极性能版)
+# =========================================================
 echo ">>> [Kernel] 正在修复 eBPF/Daed 编译依赖..."
 
-find package feeds -name "Makefile" -path "*/daed/*" 2>/dev/null | xargs -r sed -i 's/+vmlinux-btf//g' 2>/dev/null || true
-echo "✅ 移除了 Daed 中的 vmlinux-btf 虚拟依赖。"
-
+# 强行打通内核 BPF 与 TC (Traffic Control) 前置依赖
 for conf in target/linux/mediatek/filogic/config-*; do
+    # 【关键修正】：if 和 [ 之间必须有空格！
     if [ -f "$conf" ]; then
         echo ">>> 正在为 $conf 注入 eBPF/TC 核心与极致性能配置..."
         
-        if ! grep -q "CONFIG_NET_SCHED=y" "$conf"; then
-            cat >> "$conf" <<EOF
-CONFIG_NET_SCHED=y
-CONFIG_NET_CLS=y
-CONFIG_NET_CLS_ACT=y
-CONFIG_NET_INGRESS=y
-CONFIG_NET_EGRESS=y
-CONFIG_NET_CLS_BPF=m
-CONFIG_NET_ACT_BPF=m
-CONFIG_BPF=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_CGROUP_BPF=y
-CONFIG_DEBUG_INFO_BTF=y
-CONFIG_BPF_JIT=y
-CONFIG_BPF_JIT_ALWAYS_ON=y
-CONFIG_BPF_STREAM_PARSER=y
-CONFIG_NET_SOCK_MSG=y
-CONFIG_XDP_SOCKETS=y
-EOF
-        fi
+        # --- 1. 流量控制 (TC) 前置大门 (缺失会导致 act_bpf 丢失) ---
+        echo "CONFIG_NET_SCHED=y" >> "$conf"
+        echo "CONFIG_NET_CLS=y" >> "$conf"
+        echo "CONFIG_NET_CLS_ACT=y" >> "$conf"
+        echo "CONFIG_NET_INGRESS=y" >> "$conf"
+        echo "CONFIG_NET_EGRESS=y" >> "$conf"
+ 
+        # --- 2. BPF 核心与模块 ---
+        echo "CONFIG_NET_CLS_BPF=m" >> "$conf"
+        echo "CONFIG_NET_ACT_BPF=m" >> "$conf"
+        echo "CONFIG_BPF=y" >> "$conf"
+        echo "CONFIG_BPF_SYSCALL=y" >> "$conf"
+        echo "CONFIG_CGROUP_BPF=y" >> "$conf"
+
+        # --- 3. BPF 极致性能优化 (榨干路由器算力) ---
+        echo "CONFIG_BPF_JIT=y" >> "$conf"
+        echo "CONFIG_BPF_JIT_ALWAYS_ON=y" >> "$conf"
+        echo "CONFIG_BPF_STREAM_PARSER=y" >> "$conf"
+        echo "CONFIG_NET_SOCK_MSG=y" >> "$conf"
+        echo "CONFIG_XDP_SOCKETS=y" >> "$conf"
+        
         echo "✅ eBPF 高性能与底层网络调度配置注入完成。"
     fi
 done
