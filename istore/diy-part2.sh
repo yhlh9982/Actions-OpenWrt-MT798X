@@ -157,41 +157,6 @@ if [ -n "$RUST_FILE" ] && [ -f "$RUST_FILE" ]; then
     echo "✅ Rust CI-LLVM build enabled (Safe Mode)!"
 fi
 
-# =========================================================
-# 修复 eBPF 与 Daed 的内核依赖冲突 (终极性能版)
-# =========================================================
-echo ">>> [Kernel] 正在修复 eBPF/Daed 编译依赖..."
-
-# 强行打通内核 BPF 与 TC (Traffic Control) 前置依赖
-for conf in target/linux/mediatek/filogic/config-*; do
-    if [ -f "$conf" ]; then
-        echo ">>> 正在为 $conf 注入 eBPF/TC 核心与极致性能配置..."
-        
-        # --- 1. 流量控制 (TC) 前置大门 (缺失会导致 act_bpf 丢失) ---
-        echo "CONFIG_NET_SCHED=y" >> "$conf"
-        echo "CONFIG_NET_CLS=y" >> "$conf"
-        echo "CONFIG_NET_CLS_ACT=y" >> "$conf"
-        echo "CONFIG_NET_INGRESS=y" >> "$conf"
-        echo "CONFIG_NET_EGRESS=y" >> "$conf"
- 
-        # --- 2. BPF 核心与模块 ---
-        echo "CONFIG_NET_CLS_BPF=m" >> "$conf"
-        echo "CONFIG_NET_ACT_BPF=m" >> "$conf"
-        echo "CONFIG_BPF=y" >> "$conf"
-        echo "CONFIG_BPF_SYSCALL=y" >> "$conf"
-        echo "CONFIG_CGROUP_BPF=y" >> "$conf"
-
-        # --- 3. BPF 极致性能优化 (榨干路由器算力) ---
-        echo "CONFIG_BPF_JIT=y" >> "$conf"
-        echo "CONFIG_BPF_JIT_ALWAYS_ON=y" >> "$conf"
-        echo "CONFIG_BPF_STREAM_PARSER=y" >> "$conf"
-        echo "CONFIG_NET_SOCK_MSG=y" >> "$conf"
-        echo "CONFIG_XDP_SOCKETS=y" >> "$conf"
-        
-        echo "✅ eBPF 高性能与底层网络调度配置注入完成。"
-    fi
-done
-
 # ---------------------------------------------------------
 # 8. 系统收尾工作
 # ---------------------------------------------------------
