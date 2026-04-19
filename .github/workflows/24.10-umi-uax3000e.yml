@@ -100,16 +100,21 @@ jobs:
         sudo -E apt -yqq autoremove --purge
         sudo -E apt -yqq clean
         sudo -E timedatectl set-timezone "$TZ"
-        
-        sudo -E apt-get install -yqq build-essential bc flex bison python3 xz-utils tar libssl-dev libelf-dev libfuse-dev clang llvm dwarves dos2unix nodejs npm
-        sudo npm install -g pnpm
-        
+                
         sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh )'
         
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
         echo "初始磁盘空间:"
         df -hT
+
+    - name: Install compiling dependencies for daed and vmlinux-btf
+      run: |
+          sudo apt-get update -yqq
+          # 1. 一次性安装所有 C/C++ 编译与 eBPF 依赖 
+          sudo apt-get install -yqq clang llvm dwarves build-essential libssl-dev libelf-dev bc flex bison python3 xz-utils tar dos2unix libfuse-dev
+          # 2. 利用 Actions 自带的高版本 Node.js 直接全局安装 pnpm
+          sudo npm install -g pnpm
 
     # 3. 克隆源码
     - name: Clone source code （克隆源码）
