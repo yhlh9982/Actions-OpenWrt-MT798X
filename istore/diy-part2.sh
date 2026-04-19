@@ -104,7 +104,7 @@ rm $WORKINGDIR/${LUCIBRANCH}.zip
 # 使用更强力的 grep 匹配确保绝对能找到 Makefile
 DAED_MK=$(find package feeds -name "Makefile" 2>/dev/null | grep "daed/daed/Makefile" | head -n 1)
 
-if [ -f "$DAED_MK" ]; then
+if[ -f "$DAED_MK" ]; then
     echo ">>> 正在执行 daed 前端构建终极修复..."
 
     # 1. 暴力清理原 Makefile 中带有缺陷的前端下载和构建逻辑
@@ -115,8 +115,9 @@ if [ -f "$DAED_MK" ]; then
     sed -i '/corepack/d' "$DAED_MK"
 
     # 2. 强行将正确的 Web 前端构建命令“插队”到 Build/Compile 阶段的最前方！
+    # ⚠️ 修复 pnpm 在 CI 环境下的 frozen-lockfile 严格验证报错
     sed -i '/define Build\/Compile/a \
-__TAB__( cd $(PKG_BUILD_DIR)/.. && pnpm install && pnpm run build && mkdir -p $(PKG_BUILD_DIR)/webrender/web && cp -a dist/. $(PKG_BUILD_DIR)/webrender/web/ )' "$DAED_MK"
+__TAB__( cd $(PKG_BUILD_DIR)/.. && pnpm install --no-frozen-lockfile && pnpm run build && mkdir -p $(PKG_BUILD_DIR)/webrender/web && cp -a dist/. $(PKG_BUILD_DIR)/webrender/web/ )' "$DAED_MK"
     
     # 替换回 Makefile 必需的 Tab 缩进
     sed -i 's/__TAB__/\t/g' "$DAED_MK"
