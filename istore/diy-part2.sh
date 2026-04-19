@@ -115,9 +115,9 @@ if [ -f "$DAED_MK" ]; then
     sed -i '/corepack/d' "$DAED_MK"
 
     # 2. 强行将正确的 Web 前端构建命令“插队”到 Build/Compile 阶段的最前方！
-    # ⚠️ 修复 pnpm 在 CI 环境下的 frozen-lockfile 严格验证报错
+    # ⚠️ 修复：适配 daed 最新的 monorepo 架构，将目标目录更正为 apps/web/dist
     sed -i '/define Build\/Compile/a \
-__TAB__( cd $(PKG_BUILD_DIR)/.. && pnpm install --no-frozen-lockfile && pnpm run build && mkdir -p $(PKG_BUILD_DIR)/webrender/web && cp -a dist/. $(PKG_BUILD_DIR)/webrender/web/ )' "$DAED_MK"
+__TAB__( cd $(PKG_BUILD_DIR)/.. && pnpm install --no-frozen-lockfile && pnpm run build && mkdir -p $(PKG_BUILD_DIR)/webrender/web && cp -a apps/web/dist/. $(PKG_BUILD_DIR)/webrender/web/ )' "$DAED_MK"
     
     # 替换回 Makefile 必需的 Tab 缩进
     sed -i 's/__TAB__/\t/g' "$DAED_MK"
