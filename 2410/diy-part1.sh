@@ -52,7 +52,7 @@ UPDATE_PACKAGE "kucat" "sirpdboy/luci-theme-kucat" "master"
 UPDATE_PACKAGE "kucat-config" "sirpdboy/luci-app-kucat-config" "master"
 
 #科学插件
-UPDATE_PACKAGE "daed" "QiuSimons/luci-app-daed" "master"
+UPDATE_PACKAGE "daed" "QiuSimons/luci-app-daed" "kix"
 UPDATE_PACKAGE "vmlinux-btf" "QiuSimons/vmlinux-btf" "master"
 UPDATE_PACKAGE "helloworld-ssrp" "fw876/helloworld" "master"
 UPDATE_PACKAGE "homeproxy" "VIKINGYFY/homeproxy" "main"
