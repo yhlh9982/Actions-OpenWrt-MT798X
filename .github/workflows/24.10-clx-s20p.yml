@@ -2,10 +2,11 @@ name: 24.10-clx-s20p
 
 env:
   DEVICE_NAME: 24.10-clx-s20p
-  REPO_URL: https://github.com/dailook/immortalwrt-mt798x-6.6
+  # REPO_URL: https://github.com/dailook/immortalwrt-mt798x-6.6
+  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
   REPO_BRANCH: openwrt-24.10-6.6
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: 24.10/24.10-clx-s20p
+  CONFIG_FILE: 24.10/mt7986-clx-s20p.config
   DIY_P1_SH: 24.10/diy-part1.sh
   DIY_P2_SH: 24.10/diy-part2.sh
   UPLOAD_BIN_DIR: true
