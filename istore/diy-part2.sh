@@ -197,11 +197,16 @@ for conf in target/linux/mediatek/filogic/config-*; do
 cat >> $conf << 'EOF'
 
 # =========================================================
-# Cgroup v2（daed 必需，精简版）
+# Cgroup v2（daed 必需）
 # =========================================================
 CONFIG_CGROUPS=y
 CONFIG_CGROUP_BPF=y
 CONFIG_SOCK_CGROUP_DATA=y
+CONFIG_CGROUP_CPUACCT=y
+CONFIG_CGROUP_DEVICE=y
+CONFIG_CGROUP_FREEZER=y
+CONFIG_CGROUP_PIDS=y
+CONFIG_MEMCG=y
 
 # =========================================================
 # eBPF / Daed 核心
@@ -211,6 +216,7 @@ CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
 CONFIG_BPF_JIT_ALWAYS_ON=y
 CONFIG_BPF_UNPRIV_DEFAULT_OFF=y
+CONFIG_BPF_EVENTS=y
 
 # =========================================================
 # eBPF 网络调度
