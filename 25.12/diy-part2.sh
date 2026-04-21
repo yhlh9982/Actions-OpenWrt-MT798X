@@ -87,109 +87,96 @@ else
   fi
 fi
 
-# 内核额外添加
+# =========================================================
+# 4. 内核配置追加（OpenWrt 25.x / kernel 6.12+）
+# =========================================================
 for conf in target/linux/mediatek/filogic/config-*; do
 cat >> $conf << 'EOF'
 
 # =========================================================
-# CPU 调度优化
+# Cgroup BPF（daed 必需，SOCK_CGROUP_DATA 已被自动选中）
 # =========================================================
-
-CONFIG_PREEMPT_VOLUNTARY=y
-CONFIG_HZ_250=y
-CONFIG_SCHED_AUTOGROUP=y
-
-# =========================================================
-# Cgroup v2 完整支持（daed pname routing 必需）
-# =========================================================
-
-CONFIG_CGROUPS=y
 CONFIG_CGROUP_BPF=y
-CONFIG_CGROUP_CPUACCT=y
-CONFIG_CGROUP_DEVICE=y
-CONFIG_CGROUP_FREEZER=y
-CONFIG_CGROUP_PIDS=y
-CONFIG_CGROUP_SCHED=y
-
-CONFIG_MEMCG=y
-
-CONFIG_SOCK_CGROUP_DATA=y
 
 # =========================================================
-# eBPF / Daed 核心
+# eBPF 增强（BPF/BPF_SYSCALL/BPF_JIT 已是 25.x 默认值）
 # =========================================================
-
-CONFIG_BPF=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_BPF_JIT=y
 CONFIG_BPF_JIT_ALWAYS_ON=y
-CONFIG_BPF_UNPRIV_DEFAULT_OFF=y
 
 # =========================================================
-# eBPF 网络调度
+# eBPF 网络调度（NET_SCHED 已是默认值）
 # =========================================================
-
-CONFIG_NET_SCHED=y
-CONFIG_NET_CLS=y
 CONFIG_NET_CLS_ACT=y
-
 CONFIG_NET_ACT_BPF=m
 CONFIG_NET_CLS_BPF=m
 
 # =========================================================
 # XDP / 高速数据路径
 # =========================================================
-
 CONFIG_XDP_SOCKETS=y
 CONFIG_BPF_STREAM_PARSER=y
-CONFIG_NET_SOCK_MSG=y
 
 # =========================================================
-# 网络命名空间
+# 诊断接口（INET_DIAG 已是默认值）
 # =========================================================
-
-CONFIG_NET_NS=y
-
-# =========================================================
-# 诊断接口
-# =========================================================
-
-CONFIG_INET_DIAG=y
 CONFIG_INET_TCP_DIAG=y
-CONFIG_PACKET_DIAG=y
 
 # =========================================================
-# 网络性能增强
+# Conntrack 增强（EVENTS/CT_NETLINK 已是默认值）
 # =========================================================
-
-CONFIG_NET_RX_BUSY_POLL=y
-CONFIG_BQL=y
-CONFIG_NET_FLOW_LIMIT=y
-CONFIG_TCP_FASTOPEN=y
-
-# =========================================================
-# MT7986 多核优化
-# =========================================================
-
-CONFIG_RPS=y
-CONFIG_RFS_ACCEL=y
-CONFIG_XPS=y
-
-# =========================================================
-# TCP 优化
-# =========================================================
-
-CONFIG_TCP_CONG_BBR=y
-CONFIG_DEFAULT_TCP_CONG="bbr"
-
-# =========================================================
-# 高速包处理
-# =========================================================
-
-CONFIG_GRO_CELLS=y
+CONFIG_NF_CONNTRACK_TIMESTAMP=y
+CONFIG_NF_CONNTRACK_LABELS=y
 
 EOF
 done
+
+echo "✅ 内核配置已追加（25.x 精简版）"
+
+# =========================================================
+# 5. 网络参数优化（sysctl）
+# =========================================================
+mkdir -p files/etc/sysctl.d/
+
+cat > files/etc/sysctl.d/99-proxy-optimize.conf << 'SYSCTL'
+# ---------------------------------------------------------
+# Conntrack（daed/代理高并发必需）
+# ---------------------------------------------------------
+net.netfilter.nf_conntrack_max=32768
+net.netfilter.nf_conntrack_tcp_timeout_established=3600
+net.netfilter.nf_conntrack_udp_timeout=60
+net.netfilter.nf_conntrack_udp_timeout_stream=120
+
+# ---------------------------------------------------------
+# TCP 优化
+# ---------------------------------------------------------
+net.core.netdev_max_backlog=2048
+net.core.somaxconn=2048
+net.ipv4.tcp_max_syn_backlog=2048
+net.ipv4.tcp_fastopen=3
+net.ipv4.tcp_slow_start_after_idle=0
+net.ipv4.tcp_tw_reuse=1
+net.ipv4.tcp_fin_timeout=30
+net.ipv4.tcp_keepalive_time=600
+net.ipv4.tcp_keepalive_intvl=15
+net.ipv4.tcp_keepalive_probes=5
+net.ipv4.tcp_max_tw_buckets=8192
+
+# ---------------------------------------------------------
+# 缓冲区（适配 256MB 路由器）
+# ---------------------------------------------------------
+net.core.rmem_max=4194304
+net.core.wmem_max=4194304
+net.ipv4.tcp_rmem=4096 131072 4194304
+net.ipv4.tcp_wmem=4096 65536 4194304
+net.ipv4.udp_mem=8192 12288 16384
+
+# ---------------------------------------------------------
+# 本地端口范围
+# ---------------------------------------------------------
+net.ipv4.ip_local_port_range=1024 65535
+SYSCTL
+
+echo "✅ 网络优化参数已写入"
 
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
