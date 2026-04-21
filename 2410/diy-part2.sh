@@ -103,14 +103,20 @@ if [ -n "$OPENLIST2_DIR" ]; then
     echo "✅ OpenList2 菜单已移动到 NAS"
 fi
 
-#修复Rust编译失败
-RUST_FILE=$(find ../feeds/packages/ -maxdepth 3 -type f -wholename "*/rust/Makefile")
+# 修复Rust本地编译LLVM
+RUST_FILE="feeds/packages/lang/rust/Makefile"
+
 if [ -f "$RUST_FILE" ]; then
-	echo " "
-
-	sed -i 's/ci-llvm=true/ci-llvm=false/g' $RUST_FILE
-
-	cd $PKG_PATH && echo "rust has been fixed!"
+  sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "$RUST_FILE"
+  echo "✅ Rust 已设置为本地编译 LLVM"
+else
+  RUST_FILE=$(find feeds/ -type f -name "Makefile" -path "*/lang/rust/*" | head -1)
+  if [ -n "$RUST_FILE" ]; then
+    sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "$RUST_FILE"
+    echo "✅ Rust 已设置为本地编译 LLVM (路径: $RUST_FILE)"
+  else
+    echo "⚠️ 未找到 Rust Makefile，跳过"
+  fi
 fi
 
 # =========================================================
