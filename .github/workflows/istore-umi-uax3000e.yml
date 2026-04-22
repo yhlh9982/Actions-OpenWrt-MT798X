@@ -9,6 +9,7 @@ env:
   CONFIG_FILE: istore/istore-umi-uax3000e
   DIY_P1_SH: istore/diy-part1.sh
   DIY_P2_SH: istore/diy-part2.sh
+  DIY_P3_SH: diy-partX.sh
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
