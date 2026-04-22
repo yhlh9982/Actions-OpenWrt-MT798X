@@ -18,7 +18,7 @@ H大源码网址: https://github.com/hanwckf/immortalwrt-mt798x
 
 dailook大佬源码网址: https://github.com/dailook/immortalwrt-mt798x-6.6
 
-预制菜大佬源码网址:https://github.com/Yuzhii0718/immortalwrt-mt798x-6.6-padavanonly
+预制菜大佬源码网址: https://github.com/Yuzhii0718/immortalwrt-mt798x-6.6-padavanonly
 
 25.12分支维护大佬chasey-dev网址：https://github.com/chasey-dev/immortalwrt-mt798x-rebase
 
