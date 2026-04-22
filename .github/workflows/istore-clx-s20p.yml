@@ -9,7 +9,6 @@ env:
   CONFIG_FILE: istore/istore-clx-s20p.config
   DIY_P1_SH: istore/diy-part1.sh
   DIY_P2_SH: istore/diy-part2.sh
-  DIY_P3_SH: diy-partX.sh
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -115,17 +114,6 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
-    # =========================================================
-    # 5.5 加载自定义配置 (diy-part3.sh)
-    # =========================================================
-    - name: Load custom configuration (diy-part3.sh)
-      run: |
-        [ -e files ] && cp -r files openwrt/files
-        [ -e $CONFIG_FILE ] && cp $CONFIG_FILE openwrt/.config
-        chmod +x $DIY_P3_SH
-        cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P3_SH
 
     # =========================================================
     # 6. SSH 调试（可选）
