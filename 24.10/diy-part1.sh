@@ -29,7 +29,7 @@ git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/custom/momo
 
 # Daed
-git clone --depth=1 -b kix https://github.com/QiuSimons/luci-app-daed.git package/custom/daed
+# git clone --depth=1 -b kix https://github.com/QiuSimons/luci-app-daed.git package/custom/daed
 # git clone --depth=1 -b master https://github.com/QiuSimons/luci-app-daed.git package/custom/daed
 # 添加 vmlinux-btf 模块
 git clone --depth=1 https://github.com/QiuSimons/vmlinux-btf.git package/custom/vmlinux-btf
