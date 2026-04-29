@@ -72,3 +72,44 @@ echo "========================================="
 grep PKG_VERSION "$DAED_MK"
 grep PKG_MIRROR_HASH "$DAED_MK"
 grep -A4 "define Download/daed-web" "$DAED_MK" | grep HASH
+
+
+# ---------------------------------------------------------
+# 关闭 OpenClash 编译 Rust 
+# ---------------------------------------------------------
+echo ">>> 开始执行双重拦截：关闭 Ruby YJIT，跳过 rust/host 编译..."
+
+# ==========================================
+# 方案 A：先从顶层配置文件强制取消 YJIT 编译
+# ==========================================
+# 遍历当前目录下的系统 .config 以及你仓库里的自定义 config (如 mt7986.config)
+for conf in .config *.config; do
+    if [ -f "$conf" ]; then
+        # 1. 剔除可能存在的开启选项 (防冲突)
+        sed -i '/CONFIG_RUBY_ENABLE_YJIT/d' "$conf"
+        # 2. 强行追加关闭指令 (最高优先级)
+        echo "# CONFIG_RUBY_ENABLE_YJIT is not set" >> "$conf"
+        echo "✅ 方案 A 成功：已在 $conf 中强制声明关闭 RUBY_ENABLE_YJIT"
+    fi
+done
+
+# ==========================================
+# 修改底层 Makefile，物理取消依赖引擎
+# ==========================================
+RUBY_MK=$(find feeds -name "Makefile" -path "*/lang/ruby/Makefile" 2>/dev/null | head -n 1)
+
+if[ -f "$RUBY_MK" ]; then
+    echo ">>> 正在魔改 Ruby Makefile，执行..."
+    
+    # 1. 破坏默认开启判定 (把大闪存默认开启改为默认关闭)
+    sed -i 's/default y if !SMALL_FLASH/default n/g' "$RUBY_MK"
+    
+    # 2. 釜底抽薪：暴力删掉引发 Rust 编译的触发关键词！
+    sed -i 's/RUBY_ENABLE_YJIT:rust\/host//g' "$RUBY_MK"
+    
+    echo "✅ 方案 B 成功：Ruby 对 Rust 的依赖链已被彻底斩断！"
+else
+    echo "⚠️ 警告: 未找到 Ruby 的 Makefile，可能路径有变，方案 B 跳过。"
+fi
+
+echo "🎉 双重拦截部署完毕！带有 OpenClash 的固件编译将重回极速！"
