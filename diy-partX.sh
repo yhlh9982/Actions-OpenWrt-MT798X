@@ -105,7 +105,7 @@ if [ -f "$RUBY_MK" ]; then
     sed -i '/config RUBY_ENABLE_YJIT/,/help/{s/default y.*/default n/g}' "$RUBY_MK"
     
     # 2. 釜底抽薪：精准删掉引发 Rust 编译的宿主机依赖关键词
-    sed -i 's/RUBY_ENABLE_YJIT:rust\/host//g' "$RUBY_MK"
+    # sed -i 's/RUBY_ENABLE_YJIT:rust\/host//g' "$RUBY_MK"
     
     echo "✅ 方案 B 成功：Ruby 对 Rust 的依赖链已被彻底斩断！"
 else
