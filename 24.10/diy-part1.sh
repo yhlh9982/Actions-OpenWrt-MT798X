@@ -31,12 +31,14 @@ git clone --depth=1 https://github.com/CHKayanami/OpenWrt-nikki-rs.git package/c
 
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/custom/momo
 
-# Daed
-# git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/daed-honk
-git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/daed-honk
-# git clone --depth=1 https://github.com/breeze303/openwrt-honk.git package/custom/daed-honk
+# Dae
+git clone --depth=1 https://github.com/QiuSimons/luci-app-dae.git package/custom/openwrt-dae
 
-git clone --depth=1 https://github.com/kenzok8/openwrt-daede.git package/custom/daede
+# git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/openwrt-honk
+git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/openwrt-honk
+# git clone --depth=1 https://github.com/breeze303/openwrt-honk.git package/custom/openwrt-honk
+
+# git clone --depth=1 https://github.com/kenzok8/openwrt-daede.git package/custom/daede
 
 # SSR+
 # git clone --depth=1 https://github.com/fw876/helloworld.git package/custom/ssrp
