@@ -33,11 +33,6 @@ git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/c
 
 # Dae
 git clone --depth=1 https://github.com/QiuSimons/luci-app-dae.git package/custom/openwrt-dae
-
-# git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/openwrt-honk
-git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/openwrt-honk
-# git clone --depth=1 https://github.com/breeze303/openwrt-honk.git package/custom/openwrt-honk
-
 # git clone --depth=1 https://github.com/kenzok8/openwrt-daede.git package/custom/daede
 
 # SSR+
