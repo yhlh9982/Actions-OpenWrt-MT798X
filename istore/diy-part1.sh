@@ -42,7 +42,7 @@ git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/c
 
 # Daed
 # git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/daed-honk
-git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/daed-honk
+# git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/daed-honk
 # git clone --depth=1 https://github.com/breeze303/openwrt-honk.git package/custom/daed-honk
 
 git clone --depth=1 https://github.com/kenzok8/openwrt-daede.git package/custom/daede
