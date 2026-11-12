@@ -77,3 +77,7 @@ git clone --depth=1 https://github.com/eamonxg/luci-app-aurora-config.git packag
 
 git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat.git package/custom/luci-theme-kucat
 git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config.git package/custom/luci-app-kucat-config
+
+# 替换更新版本的golong
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
