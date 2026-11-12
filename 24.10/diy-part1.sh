@@ -84,6 +84,9 @@ mv $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}/* $WORKINGDIR/
 rmdir $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}
 rm $WORKINGDIR/${LUCIBRANCH}.zip
 
+# oxidns
+git clone --depth=1 https://github.com/svenshi/luci-app-oxidns.git package/custom/oxidns
+
 # VPN
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/custom/easytier
 git clone --depth=1 https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community.git package/custom/tailscale-community
