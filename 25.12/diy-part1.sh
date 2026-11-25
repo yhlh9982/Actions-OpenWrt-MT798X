@@ -29,6 +29,8 @@ git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/
 
 git clone --depth=1 https://github.com/CHKayanami/OpenWrt-nikki-rs.git package/custom/nikki-rs
 
+git clone --depth=1 https://github.com/lancecheney/nikki-concord.git package/custom/nikki-concord
+
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/custom/momo
 
 # Daed
