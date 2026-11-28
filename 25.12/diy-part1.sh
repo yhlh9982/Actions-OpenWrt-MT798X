@@ -34,17 +34,15 @@ git clone --depth=1 https://github.com/lancecheney/nikki-concord.git package/cus
 
 git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo.git package/custom/momo
 
-# Daed
-# git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/daed-honk
-git clone --depth=1 https://github.com/QiuSimons/luci-app-honk.git package/custom/daed-honk
-# git clone --depth=1 https://github.com/breeze303/openwrt-honk.git package/custom/daed-honk
-
+# Dae
 rm -rf feeds/packages/net/dae
 rm -rf feeds/packages/net/daed
 rm -rf feeds/luci/applications/luci-app-dae
 rm -rf feeds/luci/applications/luci-app-daed
-git clone --depth=1 -b kix https://github.com/QiuSimons/luci-app-dae.git package/custom/openwrt-dae
+git clone --depth=1 -b master https://github.com/QiuSimons/luci-app-daeuniverse.git package/custom/daeuniverse
 # git clone --depth=1 https://github.com/kenzok8/openwrt-daede.git package/custom/daede
+
+# git clone --depth=1 https://github.com/kenzok8/openwrt-honk.git package/custom/daed-honk
 
 # SSR+
 # git clone --depth=1 https://github.com/fw876/helloworld.git package/custom/ssrp
